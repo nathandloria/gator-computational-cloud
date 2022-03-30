@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html dir="ltr" lang="en">
+
+<head>
+    <meta content="GCC workflow executor page" name="Description">
+    <meta charset="utf-8">
+    <meta content="width=device-width, initial-scale=1" name="viewport">
+    <title>GCC | Execute Workflow</title>
+    <link crossorigin="anonymous" href="https://stackpath.bootstrapcdn.com/bootswatch/4.5.2/superhero/bootstrap.min.css"
+        integrity="sha384-HnTY+mLT0stQlOwD3wcAzSVAZbrBp141qwfR4WfTqVQKSgmcgzk+oP0ieIyrxiFO" rel="stylesheet">
+</head>
+
+<body>
+    <!-- begin style -->
+    <style media="screen">
+        .brad-100 {
+            border-radius: 100vh;
+        }
+
+        .logbutt:hover {
+            color: white;
+        }
+
+        .inp {
+            border-radius: 3px;
+            border-color: #ebebeb;
+        }
+
+        .nav-link.active {
+            border-color: rgba(223, 105, 26, 0.1);
+        }
+    </style>
+    <!-- end stylre -->
+
+    <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
+        <a class="navbar-brand" href="/user-home">GCC</a>
+        <button aria-controls="navbarColor01" aria-expanded="false" aria-label="Toggle navigation"
+            class="navbar-toggler" data-target="#navbarColor01" data-toggle="collapse" type="button">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+
+        <div class="collapse navbar-collapse" id="navbarColor01">
+            <ul class="navbar-nav ml-auto">
+                <li class="nav-item">
+                    <a class="nav-link" href="/user-machine-pool">View Machine Pool</a>
+                </li>
+                <li class="nav-item active">
+                    <a class="nav-link" href="/user-workflows">View Workflows</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="/user-credentials">Configure External Credentials</a>
+                </li>
+                <li>
+                    <a class="nav-link" href="/user-logout">Logout</a>
+                </li>
+            </ul>
+        </div>
+    </nav>
+    <div class="container-fluid" style="margin-top:15px">
+        <div class="row">
+            <div class="col-md-12">
+                <div class="jumbotron" style="text-align:center">
+                    <h1><b>Workflow Executor</b></h1>
+                    <h5>Please follow the prompts below</h5>
+                    <hr />
+                    <div class="container">
+                        <div class="row">
+                            <div class="col-md-12">
+                                {% if workflows %}
+                                {% for wf_name, wf_exec_data in workflows.items %}
+                                <div class="card border-primary mb-3"
+                                    style="text-align:left;max-width:50rem;border-radius:5px;margin-left:auto;margin-right:auto;">
+                                    <div class="card-header"></div>
+                                    <div class="card-body">
+                                        <h4 class="card-title"><b>{{ wf_name }}</b></h4>
+                                        <p><small><b>Number of Nodes:</b> {{ wf_exec_data.node_ct }}</small></p>
+                                        <p><small><b>Execution Count:</b> {{ wf_exec_data.exec_ct }}</small></p>
+                                        <hr />
+                                        <button class="btn btn-primary btn-sm"
+                                            onclick="window.location.href='../../execute-workflow/{{ wf_name }}'"
+                                            style="border-radius:5px;margin-right:5px;" type="button">
+                                            Execute
+                                        </button>
+                                    </div>
+                                </div>
+                                {% endfor %}
+                                <hr>
+                                {% if validated %}
+                                <p>All workflows displayed are of valid format!</p>
+                                {% else %}
+                                <p>Curious as to whether your workflows are of valid format?</p>
+                                <button class="btn btn-sm btn-primary"
+                                    onclick="window.location.href='/user-workflows-validated'"
+                                    style="border-radius:5px;margin-right:5px;" type="button">
+                                    Validate Workflows
+                                </button>
+                                {% endif %}
+                                {% else %}
+                                <p>There do not appear to be any workflows associated with your account! Please import a
+                                    workflow to get started.</p>
+                                {% endif %}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+<script crossorigin="anonymous" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo"
+    src="https://code.jquery.com/jquery-3.3.1.slim.min.js"></script>
+<script crossorigin="anonymous" integrity="sha384-cs/chFZiN24E4KMATLdqdvsezGxaGsi4hLGOzlXwp5UZB1LY//20VyM2taTB4QvJ"
+    src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.0/umd/popper.min.js"></script>
+<script crossorigin="anonymous" integrity="sha384-uefMccjFJAIv6A+rW+L4AHf99KvxDjWSu1z9VI8SKNVmz4sk7buKt/6v9KI65qnm"
+    src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.0/js/bootstrap.min.js"></script>
+
+</html>

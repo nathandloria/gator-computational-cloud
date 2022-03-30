@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html dir="ltr" lang="en">
+
+<head>
+  <meta content="GCC signup page" name="Description">
+  <meta charset="utf-8">
+  <meta content="width=device-width, initial-scale=1" name="viewport">
+  <title>GCC | Sign up</title>
+  <link crossorigin="anonymous" href="https://stackpath.bootstrapcdn.com/bootswatch/4.5.2/superhero/bootstrap.min.css"
+    integrity="sha384-HnTY+mLT0stQlOwD3wcAzSVAZbrBp141qwfR4WfTqVQKSgmcgzk+oP0ieIyrxiFO" rel="stylesheet">
+</head>
+
+<body>
+  <!-- begin style -->
+  <style media="screen">
+    .brad-100 {
+      border-radius: 100vh;
+    }
+
+    .logbutt {
+      background-color: #343a40;
+    }
+
+    .logbutt:hover {
+      opacity: .8;
+    }
+
+    .inp {
+      border-radius: 3px;
+      border-color: #ebebeb;
+    }
+  </style>
+  <!-- end stylre -->
+  <!-- begin navbar -->
+  <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
+    <a class="navbar-brand" href="/">GCC</a>
+    <button aria-controls="navbarColor01" aria-expanded="false" aria-label="Toggle navigation" class="navbar-toggler"
+      data-target="#navbarColor01" data-toggle="collapse" type="button">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+
+    <div class="collapse navbar-collapse" id="navbarColor01">
+      <ul class="navbar-nav mr-auto">
+        <li class="nav-item">
+          <a class="nav-link" href="/">Login</a>
+        </li>
+        <li class="nav-item active">
+          <a class="nav-link" href="/signup">Sign up<span class="sr-only">(current)</span>
+          </a>
+        </li>
+      </ul>
+    </div>
+  </nav>
+  <!-- end navbar -->
+
+  <!-- begin jumbotron -->
+  <div class="container">
+    <div class="row">
+      <div class="col-md-12">
+        <div class="jumbotron" style="margin-top:2.5vh;border-radius:5px;text-align:center">
+          <h1 class="display-5"><b>Account Creation</b></h1>
+          <h5>Please enter your information below</h5>
+          <hr class="my-4">
+          <div class="container">
+            <div class="row">
+              <div class="col-md-2"></div>
+              <div class="col-md-8">
+                <form method="post" style="display:inline-block;margin-left:auto;margin-right:auto;">
+                  {% csrf_token %}
+                  {% load widget_tweaks %}
+                  {% for el in form %}
+                  {% if forloop.counter == 5 %}
+                  <div class="form-group" style="width:200px">
+                    {{ el|attr:'type:hidden' }}
+                  </div>
+                  {% else %}
+                  <div class="form-group" style="width:200px">
+                    {{ el|add_label_class:'col-form-label' }}
+                    {{ el|add_class:'form-control form-control-sm inp' }}
+                  </div>
+                  {% endif %}
+                  {% endfor %}
+                  <input class="btn btn-primary brad-100" onclick="check();" style="border-radius:3px" type="submit"
+                    value="Sign up">
+                </form>
+              </div>
+              <div class="col-md-2"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <!-- end jumbotron -->
+</body>
+<script type="text/javascript">
+  function check() {
+    var v1 = document.getElementById('id_pwd1').value;
+    var v2 = document.getElementById('id_pwd2').value;
+    if (v1 == '' || v2 == '') {
+      return;
+    } else if (v1 != v2) {
+      alert('The passwords you entered did not match');
+    }
+  }
+
+</script>
+<script crossorigin="anonymous" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo"
+  src="https://code.jquery.com/jquery-3.3.1.slim.min.js"></script>
+<script crossorigin="anonymous" integrity="sha384-cs/chFZiN24E4KMATLdqdvsezGxaGsi4hLGOzlXwp5UZB1LY//20VyM2taTB4QvJ"
+  src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.0/umd/popper.min.js"></script>
+<script crossorigin="anonymous" integrity="sha384-uefMccjFJAIv6A+rW+L4AHf99KvxDjWSu1z9VI8SKNVmz4sk7buKt/6v9KI65qnm"
+  src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.0/js/bootstrap.min.js"></script>
+
+</html>

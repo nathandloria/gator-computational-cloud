@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html dir="ltr" lang="en">
+
+<head>
+    <meta content="GCC user home page" name="Description">
+    <meta charset="utf-8">
+    <meta content="width=device-width, initial-scale=1" name="viewport">
+    <title>GCC | Home</title>
+    <link crossorigin="anonymous" href="https://stackpath.bootstrapcdn.com/bootswatch/4.5.2/superhero/bootstrap.min.css"
+        integrity="sha384-HnTY+mLT0stQlOwD3wcAzSVAZbrBp141qwfR4WfTqVQKSgmcgzk+oP0ieIyrxiFO" rel="stylesheet">
+</head>
+
+<body>
+    <style media="screen">
+        .brad-100 {
+            border-radius: 100vh;
+        }
+
+        .logbutt:hover {
+            color: white;
+        }
+
+        .inp {
+            border-radius: 3px;
+            border-color: #ebebeb;
+        }
+
+        .nav-link.active {
+            border-color: rgba(223, 105, 26, 0.1);
+        }
+    </style>
+    <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
+        <a class="navbar-brand" href="/user-home">GCC</a>
+        <button aria-controls="navbarColor01" aria-expanded="false" aria-label="Toggle navigation"
+            class="navbar-toggler" data-target="#navbarColor01" data-toggle="collapse" type="button">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+
+        <div class="collapse navbar-collapse" id="navbarColor01">
+            <ul class="navbar-nav ml-auto">
+                <li>
+                    <button class="logbutt btn btn-sm btn-primary brad-100" onclick="window.location='/user-logout';"
+                        style="border-color:white">
+                        Logout
+                    </button>
+                </li>
+            </ul>
+        </div>
+    </nav>
+    <!-- end navbar -->
+    <div class="container-fluid" style="margin-top:15px">
+        <h2>Welcome, {{ user.username }}</h2>
+        <div class="row">
+            <div class="col-md-12">
+                <div class="btn-group w-100 btn-group-toggle" data-toggle="buttons">
+                    <label class="btn btn-primary" onclick="window.location.href='/user-machine-pool'">
+                        <input autocomplete="off" id="option2" name="options" type="radio"> View Machine Pool
+                    </label>
+                    <label class="btn btn-primary" onclick="window.location.href='/user-workflows'">
+                        <input autocomplete="off" id="option3" name="options" type="radio"> View Workflows
+                    </label>
+                    <label class="btn btn-primary" onclick="window.location.href='/user-credentials'">
+                        <input autocomplete="off" id="option4" name="options" type="radio"> Configure External
+                        Credentials
+                    </label>
+                </div>
+                <div class="jumbotron" style="text-align:center">
+                    <h1><b>Welcome to GCC</b></h1>
+                    <h5>{{ datetime }}</h5>
+                    <hr />
+                    <div class="container">
+                        <div class="row">
+                            <div class="col-md-12">
+                                <p>GCC is a tool that allows for the creation, planning, and execution of
+                                    budget-deadline-constrained workflows.
+                                    With the help of this tool, the user is able to upload source code and data required
+                                    for
+                                    certain nodes of an execution, as well as a
+                                    workflow specific xml file which allows the program to know which nodes must be
+                                    executed, and in what order to do so. The user can then select
+                                    a budget and time deadline which the tool will use to optimize both the efficiency
+                                    and
+                                    cost of the execution. The 'View Workflows' tab at the top of this page will
+                                    get you started on your workflows so you can start taking advantage of this tool!
+                                </p>
+                                <hr />
+                                <small><b>Since GCC uses Amazon AWS and Dropbox as a backend, please <a
+                                            href="../../user-credentials">provide the tool</a> with updated credentials
+                                        in
+                                        order for any executions to work properly!</b></small>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+<script crossorigin="anonymous" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo"
+    src="https://code.jquery.com/jquery-3.3.1.slim.min.js"></script>
+<script crossorigin="anonymous" integrity="sha384-cs/chFZiN24E4KMATLdqdvsezGxaGsi4hLGOzlXwp5UZB1LY//20VyM2taTB4QvJ"
+    src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.0/umd/popper.min.js"></script>
+<script crossorigin="anonymous" integrity="sha384-uefMccjFJAIv6A+rW+L4AHf99KvxDjWSu1z9VI8SKNVmz4sk7buKt/6v9KI65qnm"
+    src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.0/js/bootstrap.min.js"></script>
+
+</html>
