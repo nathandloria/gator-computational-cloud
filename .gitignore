@@ -7,8 +7,8 @@
 *.pyc
 __pycache__
 db.sqlite3
-media
-static
+media/
+static/
 
 # Backup files # 
 *.bak 
