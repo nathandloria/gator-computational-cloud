@@ -1,7 +1,7 @@
 from django import forms
 from django.contrib import admin
 
-from .models import *
+from .models import ExternalAccountCredentials, MachinePool, Machine
 
 
 class ExternalAccountCredentialsAdmin(admin.ModelAdmin):

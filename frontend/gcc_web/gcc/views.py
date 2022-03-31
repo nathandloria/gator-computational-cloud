@@ -11,13 +11,14 @@ import dropbox.files as files
 import psutil
 import xmltodict
 from django.contrib.auth import authenticate, login, logout
+from django.contrib.auth.models import User
 from django.http import HttpResponse, HttpResponseRedirect
 from django.template import loader
 from dropbox import DropboxOAuth2Flow
 from dropbox.exceptions import AuthError
 
-from .forms import *
-from .models import *
+from .forms import SignInForm, SignUpForm, CredentialForm, MachineForm
+from .models import ExternalAccountCredentials, MachinePool, Machine
 
 
 def index(request):
@@ -148,7 +149,7 @@ def user_workflows(request):
             app_key=os.environ.get("DRBX_APP_KEY"),
             app_secret=os.environ.get("DRBX_APP_SECRET"),
         ).check_user()
-    except:
+    except Exception:
         ExternalAccountCredentials.objects.filter(user=request.user).update(
             drbx_refresh_token=""
         )
@@ -160,7 +161,7 @@ def user_workflows(request):
             aws_access_key_id=aws_access_key,
             aws_secret_access_key=aws_secret_access_key,
         ).get_caller_identity()
-    except:
+    except Exception:
         ExternalAccountCredentials.objects.filter(user=request.user).update(
             aws_access_key=""
         )
@@ -190,13 +191,13 @@ def user_workflows(request):
             workflows[workflow]["node_ct"] = len(
                 drbx.files_list_folder(f"/{workflow}/nodes").entries
             )
-        except:
+        except Exception:
             workflows[workflow]["node_ct"] = 0
         try:
             workflows[workflow]["exec_ct"] = len(
                 drbx.files_list_folder(f"/{workflow}/exec").entries
             )
-        except:
+        except Exception:
             workflows[workflow]["exec_ct"] = 0
 
     template = loader.get_template("gcc/user_workflows.html")
@@ -222,7 +223,7 @@ def user_workflows_validated(request):
             app_key=os.environ.get("DRBX_APP_KEY"),
             app_secret=os.environ.get("DRBX_APP_SECRET"),
         ).check_user()
-    except:
+    except Exception:
         ExternalAccountCredentials.objects.filter(user=request.user).update(
             drbx_refresh_token=""
         )
@@ -234,7 +235,7 @@ def user_workflows_validated(request):
             aws_access_key_id=aws_access_key,
             aws_secret_access_key=aws_secret_access_key,
         ).get_caller_identity()
-    except:
+    except Exception:
         ExternalAccountCredentials.objects.filter(user=request.user).update(
             aws_access_key=""
         )
@@ -267,7 +268,7 @@ def user_workflows_validated(request):
             workflows[workflow]["exec_ct"] = len(
                 drbx.files_list_folder(f"/{workflow}/exec").entries
             )
-        except:
+        except Exception:
             workflows[workflow]["exec_ct"] = 0
 
     template = loader.get_template("gcc/user_workflows.html")
@@ -296,7 +297,7 @@ def _execute_workflow_(request, workflow_name: str):
     from .exec import User, Workflow
 
     temp_dir = gen_string()
-    os.mkdir(f"/home/ubuntu/gcc/gcc_web/tmp/{temp_dir}")
+    os.mkdir(f"{os.getcwd()}/tmp/{temp_dir}")
 
     user = User.User(
         drbx_refresh_token,
@@ -336,12 +337,12 @@ def profile_memory(func, plan, workflow):
     func(plan)
     elapsed_time = elapsed_since(start)
     mem_after = get_process_memory()
-    with open(f"/home/ubuntu/gcc/gcc_web/tmp/{workflow.temp_dir}/stats.txt", "w+") as f:
+    with open(f"{os.getcwd()}/tmp/{workflow.temp_dir}/stats.txt", "w+") as f:
         f.write(
             f"{func.__name__}:\n\tmemory before: {mem_before}\n\tmemory after: {mem_after}\n\tmemory consumed: {mem_after - mem_before}\n\texec time: {elapsed_time}"
         )
     workflow.drbx.upload_file(
-        f"/home/ubuntu/gcc/gcc_web/tmp/{workflow.temp_dir}/stats.txt",
+        f"{os.getcwd()}/tmp/{workflow.temp_dir}/stats.txt",
         f"/{workflow.workflow_name}/exec/{workflow.exec_date_time}/stats.txt",
     )
 
@@ -454,7 +455,7 @@ def user_credentials(request):
                 ExternalAccountCredentials.objects.filter(user=request.user).update(
                     aws_secret_access_key=request.POST.get("aws_secret_access_key")
                 )
-            except:
+            except Exception:
                 ExternalAccountCredentials.objects.filter(user=request.user).update(
                     aws_access_key=""
                 )
@@ -520,8 +521,8 @@ def validate_workflow(drbx, folder_to_validate_name: str):
     ]
 
     if (
-        not f"spec.xml" in folder_to_validate_items
-        or not "nodes" in folder_to_validate_items
+        "spec.xml" not in folder_to_validate_items
+        or "nodes" not in folder_to_validate_items
     ):
         return False
 
