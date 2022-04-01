@@ -11,6 +11,7 @@ from . import Workflow
 
 class Node:
     def __init__(self, workflow: Workflow, node_id: str, node_dependencies: dict):
+        """Initialize an instance of the Node class."""
         self.workflow = workflow
         self.node_id = node_id
         self.node_dependencies = node_dependencies
@@ -28,6 +29,8 @@ class Node:
         self.configure_commands = []
 
     def initialize(self):
+        """Initialize a virtual machine and assign it to the node if a machine
+        is not already available to the node."""
         security_group = self.workflow.security_group
         key_pair = self.workflow.key_pair
         retry_count = 0
@@ -60,6 +63,7 @@ class Node:
                     time.sleep(10)
 
     def set_configure_commands(self):
+        """Set the configuration commands for a specific node on it's virtual machine."""
         if self.workflow.type == 0:
             self.configure_commands += [
                 f"sudo rm -rf /home/ubuntu/{self.node_id}",
@@ -147,6 +151,7 @@ class Node:
         ]
 
     def configure(self):
+        """Execute the configuration commands set in the set_configure_commands() method."""
         key_pair = self.workflow.key_pair
 
         if self.pem is None:
@@ -173,6 +178,7 @@ class Node:
         client.close()
 
     def execute(self):
+        """Execute the node's payload on it's virtual machine."""
         key_pair = self.workflow.key_pair
         commands = []
 
@@ -245,6 +251,7 @@ class Node:
         )
 
     def terminate(self):
+        """Terminate the node's virtual machine if it was created by GCC."""
         if self.gcc_vm:
             if self.ins_id is not None:
                 self.workflow.ec2.terminate_instance(self.ins_id)

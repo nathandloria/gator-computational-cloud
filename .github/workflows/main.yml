@@ -24,3 +24,6 @@ jobs:
       - name: Run flake8
         if: always()
         run: poetry run task flake8
+      - name: Run pylint
+        if: always()
+        run: poetry run task pylint

@@ -15,6 +15,7 @@ from . import Drbx, Ec2, Node, User
 
 class Workflow:
     def __init__(self, user: User, workflow_name: str, temp_dir: str):
+        """Initialize an instance of the Workflow class."""
         self.user = user
         self.workflow_name = workflow_name
         self.temp_dir = temp_dir
@@ -35,6 +36,7 @@ class Workflow:
         self.time_to_execute = 0
 
     def plan(self, available_machines):
+        """Plan the workflow based on the XML specification file in Dropbox."""
         used_machines = []
         workflow_dict = xmltodict.parse(
             self.drbx.get_file_contents(f"/{self.workflow_name}/spec.xml")
@@ -135,6 +137,7 @@ class Workflow:
         return plan, used_machines
 
     def initialize(self):
+        """Initialize all virtual machines (if needed) for the workflow's nodes."""
         self.exec_date_time = datetime.now().strftime("%m:%d:%Y-%H:%M:%S")
         self.drbx.create_folder(f"/{self.workflow_name}/exec/{self.exec_date_time}")
 
@@ -148,6 +151,7 @@ class Workflow:
             executor.shutdown()
 
     def configure(self, plan):
+        """Configure each virtual machine in the workflow."""
         if self.type == 0:
             with ThreadPoolExecutor(max_workers=len(self.nodes)) as executor:
                 for node in self.nodes:
@@ -169,6 +173,7 @@ class Workflow:
             executor.shutdown()
 
     def execute(self, plan: dict):
+        """Execute the plan produced by the plan() method."""
         if self.type == 0:
             for level in plan:
                 with ThreadPoolExecutor(max_workers=len(plan[level])) as executor:
@@ -189,6 +194,7 @@ class Workflow:
                 t.join()
 
     def complete(self):
+        """Finish exexution by terminating all newly generated security groups, key pairs, and virtual machines."""
         self.drbx.upload_file(
             f"{os.getcwd()}/tmp/{self.temp_dir}/stats.txt",
             f"/{self.workflow_name}/exec/{self.exec_date_time}/stats.txt",
@@ -212,5 +218,6 @@ class Workflow:
 
 
 def gen_string():
+    """Generate a random 7 character string."""
     choices = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ-"
     return "".join([random.choice(choices) for _ in range(7)])

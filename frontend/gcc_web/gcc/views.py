@@ -22,6 +22,7 @@ from .models import ExternalAccountCredentials, MachinePool, Machine
 
 
 def index(request):
+    """Login page."""
     if request.method == "POST":
         form = SignInForm(request.POST)
         if form.is_valid():
@@ -42,6 +43,7 @@ def index(request):
 
 
 def signup(request):
+    """Signup page."""
     if request.method == "POST":
         form = SignUpForm(request.POST)
         if form.is_valid():
@@ -80,6 +82,7 @@ def signup(request):
 
 
 def signup_error(request):
+    """Signup error page."""
     if request.method == "POST":
         form = SignUpForm(request.POST)
         if form.is_valid():
@@ -118,11 +121,13 @@ def signup_error(request):
 
 
 def user_logout(request):
+    """Logout user."""
     logout(request)
     return HttpResponseRedirect("/")
 
 
 def user_home(request):
+    """The home page for a logged in user."""
     template = loader.get_template("gcc/user_home.html")
     context = {
         "user": request.user,
@@ -132,6 +137,7 @@ def user_home(request):
 
 
 def user_workflows(request):
+    """The page that displays a user's workflows."""
     workflows = {}
     aws_access_key = ExternalAccountCredentials.objects.filter(user=request.user)[
         0
@@ -206,6 +212,7 @@ def user_workflows(request):
 
 
 def user_workflows_validated(request):
+    """The page that displays only valid workflows for a user."""
     workflows = {}
     aws_access_key = ExternalAccountCredentials.objects.filter(user=request.user)[
         0
@@ -277,6 +284,7 @@ def user_workflows_validated(request):
 
 
 def _execute_workflow_(request, workflow_name: str):
+    """The method to execute a workflow."""
     machine_pool = MachinePool.objects.get(user=request.user)
     available_machines = [
         machine
@@ -323,15 +331,18 @@ def _execute_workflow_(request, workflow_name: str):
 
 
 def elapsed_since(start):
+    """Get the elapsed time from a starting time in H:M:S format."""
     return time.strftime("%H:%M:%S", time.gmtime(time.time() - start))
 
 
 def get_process_memory():
+    """Get the total memory used by a process."""
     process = psutil.Process(os.getpid())
     return process.memory_info().rss
 
 
 def profile_memory(func, plan, workflow):
+    """Profile the memory of a workflows execution."""
     mem_before = get_process_memory()
     start = time.time()
     func(plan)
@@ -348,6 +359,7 @@ def profile_memory(func, plan, workflow):
 
 
 def execute_workflow(request, workflow_name: str):
+    """Trigger a workflows execution in a non-blocking way."""
     t_exec = threading.Thread(target=_execute_workflow_, args=(request, workflow_name))
     t_exec.start()
 
@@ -355,6 +367,7 @@ def execute_workflow(request, workflow_name: str):
 
 
 def user_dropbox_oauth(request):
+    """Enable Dropbox OAuth flow."""
     query_params = {"code": request.GET.get("code"), "state": request.GET.get("state")}
 
     oauth = DropboxOAuth2Flow(
@@ -374,6 +387,7 @@ def user_dropbox_oauth(request):
 
 
 def user_machine_pool(request):
+    """The page to view and edit a user's machine pool."""
     machine_pool = MachinePool.objects.get(user=request.user)
     machines = machine_pool.machines.all()
 
@@ -402,12 +416,14 @@ def user_machine_pool(request):
 
 
 def user_machine_pool_delete(request, id):
+    """Delete a machine from a machine pool."""
     machine_pool = MachinePool.objects.get(user=request.user)
     machine_pool.machines.filter(id=id).delete()
     return HttpResponseRedirect("/user-machine-pool")
 
 
 def user_credentials(request):
+    """The page to view or change a user's credentials."""
     oauth = DropboxOAuth2Flow(
         consumer_key=os.environ.get("DRBX_APP_KEY"),
         redirect_uri=os.environ.get("DRBX_REDIRECT_URI"),
@@ -515,6 +531,7 @@ def user_credentials(request):
 
 
 def validate_workflow(drbx, folder_to_validate_name: str):
+    """Validate a workflow in a user's Dropbox account."""
     folder_to_validate_items = [
         item.name
         for item in drbx.files_list_folder(f"/{folder_to_validate_name}").entries
@@ -558,16 +575,19 @@ def validate_workflow(drbx, folder_to_validate_name: str):
 
 
 def get_file_contents(drbx, drbx_file_path: str):
+    """Get the contents of a file stored in Dropbox."""
     _, result = drbx.files_download(drbx_file_path)
     with io.BytesIO(result.content) as stream:
         return stream.read().decode()
 
 
 def get_file_link(drbx, drbx_file_path: str):
+    """Get the download link of a file stored in dropbox."""
     result = drbx.files_get_temporary_link(drbx_file_path)
     return result.link
 
 
 def gen_string():
+    """Generate a random string value that is 7 characters long."""
     choices = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ-"
     return "".join([random.choice(choices) for _ in range(7)])

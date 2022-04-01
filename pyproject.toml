@@ -29,6 +29,7 @@ taskipy = "^1.10.1"
 [tool.taskipy.tasks]
 black = { cmd = "black frontend backend --check", help = "Run the black checks for source code format" }
 flake8 = { cmd = "flake8 frontend backend --ignore E501,E405,W503", help = "Run the flake8 checks for source code standards" }
+pylint = { cmd = "pylint frontend backend --exit-zero", help = "Run the pylint checks for source code linting" }
 test = { cmd = "pytest -x -s", help = "Run the test suite to ensure code correctness" }
 
 [build-system]

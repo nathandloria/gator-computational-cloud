@@ -4,6 +4,7 @@ from django import forms
 
 
 class SignInForm(forms.Form):
+    """A form used for signing in."""
     user_name = forms.CharField()
     user_name.label = "Username"
 
@@ -14,6 +15,7 @@ class SignInForm(forms.Form):
 
 
 class SignUpForm(forms.Form):
+    """A form used for signing up."""
     user_name = forms.CharField()
     user_name.label = "Username"
 
@@ -44,6 +46,7 @@ class SignUpForm(forms.Form):
 
 
 class CredentialForm(forms.Form):
+    """A form used to accept credentials."""
     aws_access_key = forms.CharField()
     aws_access_key.label = "AWS Access Key"
 
@@ -54,6 +57,7 @@ class CredentialForm(forms.Form):
 
 
 class MachineForm(forms.Form):
+    """A form used to udate a user's machine pool."""
     machine_id = forms.CharField()
     machine_id.label = "Machine ID"
 
