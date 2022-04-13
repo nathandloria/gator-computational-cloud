@@ -1,7 +1,7 @@
 # GCC
 
 [![codecov](https://codecov.io/gh/Nathandloria/gator-computational-cloud/branch/main/graph/badge.svg?token=GQ4AWLJ8KW)](https://codecov.io/gh/Nathandloria/gator-computational-cloud)
-[![buildstatus](https://github.com/Nathandloria/gator-computational-cloud/workflows/lintandtest/badge.svg)](https://github.com/Nathandloria/gcc-test/actions)
+[![buildstatus](https://github.com/Nathandloria/gator-computational-cloud/workflows/lintandtest/badge.svg)](https://github.com/Nathandloria/gator-computational-cloud/actions)
 
 A lightweight framework for the execution of scientific workflows
 
