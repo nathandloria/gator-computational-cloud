@@ -16,9 +16,11 @@ from django.http import HttpResponse, HttpResponseRedirect
 from django.template import loader
 from dropbox import DropboxOAuth2Flow
 from dropbox.exceptions import AuthError
+from forms import CredentialForm, MachineForm, SignInForm, SignUpForm
+from models import ExternalAccountCredentials, Machine, MachinePool
 
-from .forms import SignInForm, SignUpForm, CredentialForm, MachineForm
-from .models import ExternalAccountCredentials, MachinePool, Machine
+from gcc_exec.gcc_user import GccUser
+from gcc_exec.gcc_workflow import GccWorkflow
 
 
 def index(request):
@@ -28,9 +30,9 @@ def index(request):
         if form.is_valid():
             entered_usr = request.POST.get("user_name")
             entered_pwd = request.POST.get("user_password")
-            user = authenticate(username=entered_usr, password=entered_pwd)
-            if user is not None:
-                login(request, user)
+            usr = authenticate(username=entered_usr, password=entered_pwd)
+            if usr is not None:
+                login(request, usr)
                 return HttpResponseRedirect("/user-home")
             else:
                 return HttpResponseRedirect("/")
@@ -51,15 +53,15 @@ def signup(request):
             pwd = request.POST.get("_user_password_")
             email = request.POST.get("user_email")
             try:
-                user = User.objects.create_user(username=usr, password=pwd, email=email)
-                login(request, user)
+                usr = User.objects.create_user(username=usr, password=pwd, email=email)
+                login(request, usr)
 
                 mp = MachinePool()
-                mp.user = user
+                mp.user = usr
                 mp.save()
 
                 ac = ExternalAccountCredentials()
-                ac.user = user
+                ac.user = usr
                 ac.aws_access_key = ""
                 ac.aws_secret_access_key = ""
                 ac.drbx_refresh_token = ""
@@ -90,15 +92,15 @@ def signup_error(request):
             pwd = request.POST.get("_user_password_")
             email = request.POST.get("user_email")
             try:
-                user = User.objects.create_user(username=usr, password=pwd, email=email)
-                login(request, user)
+                usr = User.objects.create_user(username=usr, password=pwd, email=email)
+                login(request, usr)
 
                 mp = MachinePool
-                mp.user = user
+                mp.user = usr
                 mp.save()
 
                 ac = ExternalAccountCredentials()
-                ac.user = user
+                ac.user = usr
                 ac.aws_access_key = ""
                 ac.aws_secret_access_key = ""
                 ac.drbx_refresh_token = ""
@@ -302,12 +304,7 @@ def _execute_workflow_(request, workflow_name: str):
         0
     ].drbx_refresh_token
 
-    from .exec import User, Workflow
-
-    temp_dir = gen_string()
-    os.mkdir(f"{os.getcwd()}/tmp/{temp_dir}")
-
-    user = User.User(
+    gcc_user_obj = GccUser(
         drbx_refresh_token,
         os.environ.get("DRBX_APP_KEY"),
         os.environ.get("DRBX_APP_SECRET"),
@@ -315,16 +312,17 @@ def _execute_workflow_(request, workflow_name: str):
         aws_secret_access_key,
     )
 
-    workflow = Workflow.Workflow(user, workflow_name, temp_dir)
-    plan, used_machines = workflow.plan(available_machines)
+    gcc_workflow_obj = GccWorkflow(gcc_user_obj, workflow_name)
+
+    used_machines = gcc_workflow_obj.plan(available_machines)
 
     for machine in used_machines:
         machine_pool.machines.filter(id=machine.id).update(status="In use")
 
-    workflow.initialize()
-    workflow.configure(plan)
-    profile_memory(workflow.execute, plan, workflow)
-    workflow.complete()
+    gcc_workflow_obj.initialize()
+    gcc_workflow_obj.configure()
+    gcc_workflow_obj.execute()
+    gcc_workflow_obj.complete()
 
     for machine in used_machines:
         machine_pool.machines.filter(id=machine.id).update(status="Available")

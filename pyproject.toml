@@ -9,11 +9,11 @@ python = "^3.10"
 Django = "^4.0.3"
 python-dotenv = "^0.20.0"
 django-widget-tweaks = "^1.4.12"
-django-fernet-fields = "^0.6"
+django-cryptography = "^1.1"
 django-recaptcha = "^3.0.0"
 mysqlclient = "^2.1.0"
-boto3 = "^1.21.30"
-dropbox = "^11.28.0"
+boto3 = "^1.21.35"
+dropbox = "^11.29.0"
 xmltodict = "^0.12.0"
 psutil = "^5.9.0"
 paramiko = "^2.10.3"
@@ -23,14 +23,14 @@ requests = "^2.27.1"
 black = "^22.3.0"
 pytest = "^7.1.1"
 flake8 = "^4.0.1"
-pylint = "^2.13.3"
+pylint = "^2.13.4"
 taskipy = "^1.10.1"
+pytest-codecov = "^0.4.0"
+coverage = "^6.3.2"
 
 [tool.taskipy.tasks]
-black = { cmd = "black frontend backend --check", help = "Run the black checks for source code format" }
-flake8 = { cmd = "flake8 frontend backend --ignore E501,E405,W503", help = "Run the flake8 checks for source code standards" }
-pylint = { cmd = "pylint frontend backend --exit-zero", help = "Run the pylint checks for source code linting" }
-test = { cmd = "pytest -x -s", help = "Run the test suite to ensure code correctness" }
+lint = { cmd = "black gcc_exec --check;flake8 gcc_exec --ignore=E501,W503;pylint gcc_exec", help = "Run the black checks for source code format" }
+test = { cmd = "pytest --cov gcc_exec/tests --cov-report xml:coverage.xml", help = "Run the test suite to ensure code correctness" }
 
 [build-system]
 requires = ["poetry-core>=1.0.0"]

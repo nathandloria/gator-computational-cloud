@@ -1,2 +1,10 @@
-# gator-computational-cloud
-A lightweight framework for the execution of scientific workflows with big data
+# GCC
+
+[![codecov](https://codecov.io/gh/Nathandloria/gcc-test/branch/main/graph/badge.svg?token=GQ4AWLJ8KW)](https://codecov.io/gh/Nathandloria/gcc-test)
+[![buildstatus](https://github.com/Nathandloria/gcc-test/workflows/lintandtest/badge.svg)](https://github.com/Nathandloria/gcc-test/actions)
+
+A lightweight framework for the execution of scientific workflows
+
+## Overview
+
+A scientific workflow is a cluster of nodes that work together to accomplish an end goal. When executing a workflow, especially one associated with big data, there is often a massive amount of data and time overhead to work around. Because of this, there is a need for efficient and easy-to-use software that allows for the execution of workflows on obscure computing resources. This new model mitigates the need for massive infrastructure investments by the party that is executing a workflow. Additionally, the demand for efficient task scheduling solutions is ever-increasing. All of these are issues that can be tackled with the proper implementation of a grid computing system. This grid computing approach combined with efficient task scheduling is the focus of my project: Gator Computational Cloud (GCC). GCC is a lightweight web framework that utilizes a generic task scheduling algorithm to schedule jobs in a cloud environment. This framework intelligently manages dependencies and takes a multi-threaded execution approach to increase efficiency. To execute nodes, GCC takes advantage of the Amazon AWS API to provision virtual machines. Once provisioned, the tool completes the execution and transfers any dependencies to their corresponding VM in real-time utilizing an intelligent socket infrastructure. The goal of the project is to provide a lightweight and user-friendly environment for workflow execution, while also ensuring a powerful and efficient backend that completes a user’s workflow with ease. To achieve this, some preliminary experimentation has taken place to ensure the effectiveness of the tool.

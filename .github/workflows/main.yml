@@ -1,4 +1,4 @@
-name: Lint and Test
+name: lintandtest
 
 on: [push, pull_request]
 
@@ -18,18 +18,20 @@ jobs:
         uses: Gr1N/setup-poetry@v7
       - name: Install dependencies
         run: poetry install
-      - name: Run black
+      - name: Run linters
         if: always()
-        run: poetry run task black
-      - name: Run flake8
-        if: always()
-        run: poetry run task flake8
-      - name: Run pylint
-        if: always()
-        run: poetry run task pylint
+        run: poetry run task lint
+
   test:
     name: Test
     runs-on: ubuntu-latest
+    env:
+      DRBX_APP_KEY: ${{ secrets.DRBX_APP_KEY }}
+      DRBX_APP_SECRET: ${{ secrets.DRBX_APP_SECRET }}
+      AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+      AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+      OAUTH2_REFRESH_TOKEN: ${{ secrets.OAUTH2_REFRESH_TOKEN }}
+      CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
     steps:
       - name: Checkout repository
         uses: actions/checkout@v2
@@ -43,4 +45,6 @@ jobs:
       - name: Install dependencies
         run: poetry install
       - name: Execute tests
-        run: poetry run task test      
+        run: poetry run task test   
+      - name: Upload coverage to Codecov
+        uses: codecov/codecov-action@v1   
