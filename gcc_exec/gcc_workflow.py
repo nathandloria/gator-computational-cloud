@@ -47,7 +47,7 @@ class GccWorkflow:
         }
 
     def plan(
-        self, available_machines: list = [], xml_specification: str = None
+        self, available_machines: list, xml_specification: str = None
     ) -> list:
         """This method creates an execution plan based on a workflow specification."""
         if xml_specification is None:

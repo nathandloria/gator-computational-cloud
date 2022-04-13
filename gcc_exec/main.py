@@ -18,7 +18,7 @@ def main(
     )
     gcc_workflow_obj = GccWorkflow(gcc_user_obj, workflow_name)
 
-    gcc_workflow_obj.plan()
+    gcc_workflow_obj.plan([])
     gcc_workflow_obj.initialize()
     gcc_workflow_obj.configure()
     gcc_workflow_obj.execute()
