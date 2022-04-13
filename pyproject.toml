@@ -18,6 +18,7 @@ xmltodict = "^0.12.0"
 psutil = "^5.9.0"
 paramiko = "^2.10.3"
 requests = "^2.27.1"
+rpyc = "^5.1.0"
 
 [tool.poetry.dev-dependencies]
 black = "^22.3.0"
@@ -29,7 +30,7 @@ pytest-codecov = "^0.4.0"
 coverage = "^6.3.2"
 
 [tool.taskipy.tasks]
-lint = { cmd = "black gcc_exec --check;flake8 gcc_exec --ignore=E501,W503;pylint gcc_exec", help = "Run the black checks for source code format" }
+lint = { cmd = "black gcc_exec socket_service --check;flake8 gcc_exec socket_service --ignore=E501,W503;pylint gcc_exec socket_service", help = "Run the black checks for source code format" }
 test = { cmd = "pytest --cov gcc_exec/tests --cov-report xml:coverage.xml", help = "Run the test suite to ensure code correctness" }
 
 [build-system]
