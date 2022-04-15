@@ -11,10 +11,11 @@ from typing import OrderedDict
 
 import xmltodict
 from botocore.exceptions import ClientError
-from gcc_drbx import GccDrbx
-from gcc_ec2 import GccEc2
-from gcc_node import GccNode
-from gcc_user import GccUser
+
+from gcc_exec.gcc_drbx import GccDrbx
+from gcc_exec.gcc_ec2 import GccEc2
+from gcc_exec.gcc_node import GccNode
+from gcc_exec.gcc_user import GccUser
 
 
 class GccWorkflow:
@@ -46,9 +47,7 @@ class GccWorkflow:
             "machines_initialized": None,
         }
 
-    def plan(
-        self, available_machines: list, xml_specification: str = None
-    ) -> list:
+    def plan(self, available_machines: list, xml_specification: str = None) -> list:
         """This method creates an execution plan based on a workflow specification."""
         if xml_specification is None:
             xml_specification = xmltodict.parse(
@@ -56,6 +55,8 @@ class GccWorkflow:
                     f"/{self.__workflow_dict['name']}/spec.xml"
                 )
             )
+        elif isinstance(xml_specification, str):
+            xml_specification = xmltodict.parse(xml_specification)
 
         self.__workflow_dict["type"] = int(xml_specification["workflow"]["@type"])
 
@@ -71,14 +72,15 @@ class GccWorkflow:
             node_virtual_machine = None
 
             if gcc_node_vm is not None:
-                vm_ip = gcc_node_vm["#text"]
-
-                try:
+                if isinstance(gcc_node_vm, str):
+                    vm_pem = None
+                    vm_ip = gcc_node_vm
+                elif isinstance(gcc_node_vm, OrderedDict):
                     vm_pem = self.__gcc_drbx_obj.get_file_contents(
                         f"/{self.__workflow_dict['name']}/pem/{gcc_node_vm['@pem']}"
                     ).strip("\n")
-                except KeyError:
-                    vm_pem = None
+
+                    vm_ip = gcc_node_vm["#text"]
 
                 node_virtual_machine = {"ip": vm_ip, "pem": vm_pem, "instance_id": None}
 
@@ -352,7 +354,9 @@ class GccWorkflow:
             max_workers=len(self.__workflow_dict["nodes"])
         ) as executor:
             for node in self.__workflow_dict["nodes"]:
-                executor.submit(self.__workflow_dict["nodes"][node].configure)
+                executor.submit(
+                    self.__workflow_dict["nodes"][node].configure_virtual_machine
+                )
             executor.shutdown()
 
     def initialize(self) -> None:
@@ -446,6 +450,14 @@ class GccWorkflow:
     def get_tmp_dir(self) -> str:
         """Return tmp directory string."""
         return self.__tmp_dir
+
+    def set_gcc_security_group(self, gcc_security_group: dict) -> None:
+        """Set gcc_security_group private variable."""
+        self.__gcc_security_group = gcc_security_group
+
+    def set_gcc_key_pair(self, gcc_key_pair: dict) -> None:
+        """Set gcc_key_pair private variable."""
+        self.__gcc_key_pair = gcc_key_pair
 
 
 def generate_random_string() -> str:

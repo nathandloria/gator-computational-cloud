@@ -40,7 +40,6 @@ class SocketService(rpyc.Service):
         """Handles the sending of files to one recipient."""
         import os
         import socket
-
         from pathlib import Path
 
         sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
@@ -65,7 +64,6 @@ class SocketService(rpyc.Service):
         import os
         import socket
         import threading
-
         from pathlib import Path
 
         def _send_files(filedictlist, host, port):
@@ -104,7 +102,6 @@ class SocketService(rpyc.Service):
         """Handles the receiving of files from one sender."""
         import os
         import socket
-
         from pathlib import Path
 
         def get_bytes(conn, num, buffer):
@@ -164,10 +161,9 @@ class SocketService(rpyc.Service):
 
     def receive_files_from_many(argsdictlist):
         """Handles the receiving of files from  many recipients."""
-        import socket
         import os
+        import socket
         import threading
-
         from pathlib import Path
 
         def _receive_files(outdir, host, port):
@@ -240,9 +236,10 @@ class SocketService(rpyc.Service):
 
     def upload_to_dropbox(argsdict):
         """Handles the upload of files to Dropbox."""
-        import dropbox
         import os
         import threading
+
+        import dropbox
 
         def _upload_file(local_file_path, drbx_file_path, drbx):
             chunk_size = 4 * 1024 * 1024

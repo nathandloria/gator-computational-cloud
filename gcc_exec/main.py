@@ -11,7 +11,7 @@ def main(
     aws_access_key_id: str,
     aws_secret_access_key: str,
     workflow_name: str,
-):
+) -> None:
     """This method contains code to execute a wofkflow."""
     gcc_user_obj = GccUser(
         oauth2_refresh_token, aws_access_key_id, aws_secret_access_key

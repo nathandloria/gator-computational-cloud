@@ -200,7 +200,7 @@ class GccNode:
             "exit",
         ]
 
-    def configure(self) -> None:
+    def configure_virtual_machine(self) -> None:
         """Execute configuration commands on a virtual machine."""
         keyfile = StringIO(self.__node_virtual_machine["pem"])
         mykey = paramiko.RSAKey.from_private_key(keyfile)

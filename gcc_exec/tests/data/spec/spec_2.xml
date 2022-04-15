@@ -1,0 +1,14 @@
+<?xml version="1.0"?>
+<workflow type="1">
+    <task id="n1"></task>
+    <task id="n2">
+        <dep node="n1">x</dep>
+    </task>
+    <task id="n3">
+        <dep node="n1">x</dep>
+    </task>
+    <task id="n4">
+        <dep node="n2">x</dep>
+        <dep node="n3">x</dep>
+    </task>
+</workflow>

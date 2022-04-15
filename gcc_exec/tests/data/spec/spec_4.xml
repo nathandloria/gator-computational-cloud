@@ -1,0 +1,19 @@
+<?xml version="1.0"?>
+<workflow type="1">
+    <task id="n1">
+        <vm>0.0.0.0</vm>
+    </task>
+    <task id="n2">
+        <vm>0.0.0.0</vm>
+        <dep node="n1">x</dep>
+    </task>
+    <task id="n3">
+        <vm>0.0.0.0</vm>
+        <dep node="n1">x</dep>
+    </task>
+    <task id="n4">
+        <vm>0.0.0.0</vm>
+        <dep node="n2">x</dep>
+        <dep node="n3">x</dep>
+    </task>
+</workflow>
