@@ -1,14 +1,13 @@
 """This file contains the TestGccWorkflow class."""
-# pylint: disable=W1514,R0913
+# pylint: disable=W1514,R0913,E0401
 import os
 from os.path import dirname, join
 from unittest import mock
 
 import pytest
 from dotenv import load_dotenv
-
-from gcc_exec.gcc_user import GccUser
-from gcc_exec.gcc_workflow import GccWorkflow
+from gcc_user import GccUser
+from gcc_workflow import GccWorkflow
 
 
 class TestGccWorkflow:
@@ -105,19 +104,19 @@ class TestGccWorkflow:
                 )
 
     @mock.patch(
-        "gcc_exec.gcc_node.GccNode.initialize",
+        "gcc_node.GccNode.initialize",
         return_value=None,
     )
     @mock.patch(
-        "gcc_exec.gcc_ec2.GccEc2.create_key_pair",
+        "gcc_ec2.GccEc2.create_key_pair",
         return_value=None,
     )
     @mock.patch(
-        "gcc_exec.gcc_ec2.GccEc2.create_security_group",
+        "gcc_ec2.GccEc2.create_security_group",
         return_value=None,
     )
     @mock.patch(
-        "gcc_exec.gcc_drbx.GccDrbx.create_folder",
+        "gcc_drbx.GccDrbx.create_folder",
         return_value=None,
     )
     @mock.patch("os.makedirs", return_value=None)
@@ -178,12 +177,10 @@ class TestGccWorkflow:
         assert mock_makedirs.called
 
     @mock.patch(
-        "gcc_exec.gcc_node.GccNode.set_config_commands",
+        "gcc_node.GccNode.set_config_commands",
         return_value=None,
     )
-    @mock.patch(
-        "gcc_exec.gcc_node.GccNode.configure_virtual_machine", return_value=None
-    )
+    @mock.patch("gcc_node.GccNode.configure_virtual_machine", return_value=None)
     @pytest.mark.parametrize(
         "xml_specification_filename,workflow_name",
         [
@@ -224,7 +221,7 @@ class TestGccWorkflow:
         assert mock_configure_virtual_machine.called
 
     @mock.patch(
-        "gcc_exec.gcc_node.GccNode.execute",
+        "gcc_node.GccNode.execute",
         return_value=None,
     )
     @mock.patch("time.sleep", return_value=None)
@@ -280,15 +277,15 @@ class TestGccWorkflow:
         assert mock_execute.called
 
     @mock.patch(
-        "gcc_exec.gcc_node.GccNode.terminate",
+        "gcc_node.GccNode.terminate",
         return_value=None,
     )
     @mock.patch(
-        "gcc_exec.gcc_ec2.GccEc2.delete_key_pair",
+        "gcc_ec2.GccEc2.delete_key_pair",
         return_value=None,
     )
     @mock.patch(
-        "gcc_exec.gcc_ec2.GccEc2.delete_security_group",
+        "gcc_ec2.GccEc2.delete_security_group",
         return_value=None,
     )
     @mock.patch("shutil.rmtree", return_value=None)

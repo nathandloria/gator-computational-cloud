@@ -19,7 +19,6 @@ psutil = "^5.9.0"
 paramiko = "^2.10.3"
 requests = "^2.27.1"
 rpyc = "^5.1.0"
-unittest = "^0.0"
 
 [tool.poetry.dev-dependencies]
 black = "^22.3.0"
@@ -30,9 +29,14 @@ taskipy = "^1.10.1"
 pytest-codecov = "^0.4.0"
 coverage = "^6.3.2"
 
+[tool.pytest.ini_options]
+pythonpath = [
+  ".", "gcc_exec",
+]
+
 [tool.taskipy.tasks]
 lint = { cmd = "black gcc_exec socket_service --check;flake8 gcc_exec socket_service --ignore=E501,W503;pylint gcc_exec socket_service", help = "Run the black checks for source code format" }
-test = { cmd = "pytest --cov gcc_exec/tests --cov-report xml:coverage.xml", help = "Run the test suite to ensure code correctness" }
+test = { cmd = "pytest --cov gcc_exec --cov-report xml:coverage.xml", help = "Run the test suite to ensure code correctness" }
 
 [build-system]
 requires = ["poetry-core>=1.0.0"]

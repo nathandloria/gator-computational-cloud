@@ -11,11 +11,10 @@ from typing import OrderedDict
 
 import xmltodict
 from botocore.exceptions import ClientError
-
-from gcc_exec.gcc_drbx import GccDrbx
-from gcc_exec.gcc_ec2 import GccEc2
-from gcc_exec.gcc_node import GccNode
-from gcc_exec.gcc_user import GccUser
+from gcc_drbx import GccDrbx
+from gcc_ec2 import GccEc2
+from gcc_node import GccNode
+from gcc_user import GccUser
 
 
 class GccWorkflow:

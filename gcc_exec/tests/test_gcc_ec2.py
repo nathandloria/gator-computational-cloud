@@ -7,8 +7,7 @@ from os.path import dirname, join
 import pytest
 from botocore.exceptions import ClientError
 from dotenv import load_dotenv
-
-from gcc_exec.gcc_ec2 import GccEc2
+from gcc_ec2 import GccEc2
 
 
 class TestGccEc2:

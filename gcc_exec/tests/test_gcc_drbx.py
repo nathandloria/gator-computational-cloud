@@ -1,12 +1,11 @@
 """This file contains the TestGccDrbx class."""
-
+# pylint: disable=E0401
 import os
 from os.path import dirname, join
 
 from dotenv import load_dotenv
 from dropbox.files import CreateFolderResult, DeleteResult, FileMetadata, FolderMetadata
-
-from gcc_exec.gcc_drbx import GccDrbx
+from gcc_drbx import GccDrbx
 
 
 class TestGccDrbx:
