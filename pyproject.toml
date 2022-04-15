@@ -36,7 +36,7 @@ pythonpath = [
 
 [tool.taskipy.tasks]
 lint = { cmd = "black gcc_exec socket_service --check;flake8 gcc_exec socket_service --ignore=E501,W503;pylint gcc_exec socket_service", help = "Run the black checks for source code format" }
-test = { cmd = "pytest --cov gcc_exec --cov-report xml:coverage.xml", help = "Run the test suite to ensure code correctness" }
+test = { cmd = "pytest --cov gcc_exec --cov-report xml:coverage.xml --cov-fail-under 50", help = "Run the test suite to ensure code correctness" }
 
 [build-system]
 requires = ["poetry-core>=1.0.0"]
