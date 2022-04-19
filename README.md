@@ -6,7 +6,7 @@
 
 ![logo](img/gcc_logo.jpeg)
 
-A lightweight framework for the execution of scientific workflows located at <https://gatorcompcloud.com/>
+A lightweight framework for the execution of scientific workflows.
 
 ## Overview
 
