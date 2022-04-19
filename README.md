@@ -36,6 +36,10 @@ For Dropbox credentials, clicking on the configure button will take you to Dropb
 
 For AWS credentials, a simple form will be presented to you. Once you get your credentials from the AWS IAM console associated with your account, you can paste them into the form and submit it. The required credentials are a valid access and secret key.
 
+### Machine Pool
+
+The machine pool is an important aspect of Gator Computational Cloud. To utilize it, you can input a machine’s IP and PEM file into the form, as well as a unique identifier, and submit the form. This machine will not be utilized during any workflow execution that is associated with your account. It is important to note that, without ports 22 and 80 being enabled on the machine, it will not work for the workflow. If no other virtual machine is available for a node, either from the specification file or machine pool, it will be created using AWS and terminated upon successful workflow completion.
+
 ## Managing Workflows
 
 Workflows are an integral part of Gator Computational Cloud. This is where you can define the computational payloads to be executed in the cloud. The steps for developing a successful workflow will be discussed in a later section.
@@ -51,3 +55,30 @@ To validate your workflows, navigate to the bottom of the workflow page and clic
 ### Executing Workflows
 
 On the workflow page, any workflow that is displayed will contain an `Execute` button. To execute this workflow and produce the expected output result in your Dropbox account, click this button. This process is non-blocking so you will be redirected to the same page once the execution task is spawned. Initially, a folder called `exec` will be created in the workflow base folder in your Dropbox account. Once the execution is complete, this folder will be filled with logs and output data (if applicable). 
+
+## Designing Workflows
+
+The design of workflows for execution using Gator Computational Cloud is quite simple. It is very important for these workflows to be configured properly as, if they are not, they will execute improperly and possibly waste computing resources and time. A valid workflow consists of many aspects.
+
+The first aspect of a workflow, which is optional, is the `data` folder. In this folder, the initial data that is needed by the workflow is stored. For example, in a text analysis workflow, this directory would consist of textual data that is distributed to any node that requires it. Without this folder, the workflow would need to read in data from an external source such as a database, which is still entirely valid. In this case, the `data` folder can be removed as long as it is specified that no nodes require any files from it. The next optional workflow feature is the `pem` folder. PEM stands for privacy-enhanced mail, and it is a type of certificate that ensures an SSH connection is secure in the context of GCC. This folder is necessary only if a virtual machine is specifically assigned to a certain task, in which case the user can then specify a PEM file as well. This file should be located in the `pem` folder and, without it, the task would execute with an error.
+
+```
+<?xml version="1.0"?>
+<workflow type="0">
+    <task id="n1">
+	    <dep>words.txt</dep>
+    </task>
+    <task id="n2">
+	    <dep node="n1">wc1_1.txt</dep>
+    </task>
+    <task id="n3">
+        <dep node="n1">wc1_2.txt</dep>
+    </task>
+    <task id="n4">
+	    <dep node="n2">wc2.txt</dep>
+	    <dep node="n3">wc3.txt</dep>
+    </task>
+</workflow>
+```
+
+The rest of the workflow aspects are required for the successful execution of a workflow. The first of these is the `nodes` folder. Within this folder sits a multitude of zip files corresponding to tasks specified within the specification XML file. These zip files contain four main components; an `src` folder consisting of Python source files, a `requirements.txt` file specifying any Python dependencies that the project needs to execute properly, and a `data` folder containing both an `in` and `out` directory to direct data flow between nodes. On top of the nodes folder, a valid workflow also requires a specification XML file titled `spec.xml`. This specification file is similar to that shown above; however, it will change from workflow to workflow depending on each workflow's needs. In this specific scenario, the workflow, named wf1, does not contain the optional `pem` folder, however, it contains all the required items and the optional data folder as well.
